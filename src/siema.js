@@ -25,7 +25,7 @@ export default class Siema {
     this.transformProperty = Siema.webkitOrNot();
 
     // Bind all event handlers for referencability
-    ['resizeHandler', 'touchstartHandler', 'touchendHandler', 'touchmoveHandler', 'mousedownHandler', 'mouseupHandler', 'mouseleaveHandler', 'mousemoveHandler'].forEach(method => {
+    ['resizeHandler', 'touchstartHandler', 'touchendHandler', 'touchmoveHandler', /* 'mousedownHandler', 'mouseupHandler', 'mouseleaveHandler', 'mousemoveHandler',*/ 'mousewheelHandler', 'mousewheelEndHandler'].forEach(method => {
       this[method] = this[method].bind(this);
     });
 
@@ -100,10 +100,10 @@ export default class Siema {
       this.selector.addEventListener('touchmove', this.touchmoveHandler, { passive: true });
 
       // Mouse events
-      this.selector.addEventListener('mousedown', this.mousedownHandler);
-      this.selector.addEventListener('mouseup', this.mouseupHandler);
-      this.selector.addEventListener('mouseleave', this.mouseleaveHandler);
-      this.selector.addEventListener('mousemove', this.mousemoveHandler);
+      // this.selector.addEventListener('mousedown', this.mousedownHandler);
+      // this.selector.addEventListener('mouseup', this.mouseupHandler);
+      // this.selector.addEventListener('mouseleave', this.mouseleaveHandler);
+      // this.selector.addEventListener('mousemove', this.mousemoveHandler);
     }
   }
 
@@ -117,10 +117,10 @@ export default class Siema {
     this.selector.removeEventListener('touchstart', this.touchstartHandler);
     this.selector.removeEventListener('touchend', this.touchendHandler);
     this.selector.removeEventListener('touchmove', this.touchmoveHandler);
-    this.selector.removeEventListener('mousedown', this.mousedownHandler);
-    this.selector.removeEventListener('mouseup', this.mouseupHandler);
-    this.selector.removeEventListener('mouseleave', this.mouseleaveHandler);
-    this.selector.removeEventListener('mousemove', this.mousemoveHandler);
+    // this.selector.removeEventListener('mousedown', this.mousedownHandler);
+    // this.selector.removeEventListener('mouseup', this.mouseupHandler);
+    // this.selector.removeEventListener('mouseleave', this.mouseleaveHandler);
+    // this.selector.removeEventListener('mousemove', this.mousemoveHandler);
   }
 
 
@@ -141,10 +141,12 @@ export default class Siema {
     this.sliderFrame.style.width = `${(this.selectorWidth / this.perPage) * this.innerElements.length}px`;
     this.sliderFrame.style.webkitTransition = `all ${this.config.duration}ms ${this.config.easing}`;
     this.sliderFrame.style.transition = `all ${this.config.duration}ms ${this.config.easing}`;
+    this.sliderFrame.style.display = 'flex';
+    this.sliderFrame.style.alignItems = 'strech';
 
-    if (this.config.draggable) {
-      this.selector.style.cursor = '-webkit-grab';
-    }
+    // if (this.config.draggable) {
+    //   this.selector.style.cursor = '-webkit-grab';
+    // }
 
     // Create a document fragment to put slides into it
     const docFragment = document.createDocumentFragment();
@@ -152,8 +154,7 @@ export default class Siema {
     // Loop through the slides, add styling and add them to document fragment
     for (let i = 0; i < this.innerElements.length; i++) {
       const elementContainer = document.createElement('div');
-      elementContainer.style.cssFloat = 'left';
-      elementContainer.style.float = 'left';
+      elementContainer.style.flexShrink = 0;
       elementContainer.style.width = `${100 / this.innerElements.length}%`;
       elementContainer.appendChild(this.innerElements[i]);
       docFragment.appendChild(elementContainer);
@@ -371,18 +372,17 @@ export default class Siema {
 
   /**
    * mousedown event handler
-   */
   mousedownHandler(e) {
     e.preventDefault();
     this.stopPropagation(e);
     this.pointerDown = true;
     this.drag.startX = e.pageX;
   }
+   */
 
 
   /**
    * mouseup event handler
-   */
   mouseupHandler(e) {
     this.stopPropagation(e);
     this.pointerDown = false;
@@ -394,11 +394,11 @@ export default class Siema {
     }
     this.clearDrag();
   }
+   */
 
 
   /**
    * mousemove event handler
-   */
   mousemoveHandler(e) {
     e.preventDefault();
     if (this.pointerDown) {
@@ -409,11 +409,11 @@ export default class Siema {
       this.sliderFrame.style[this.transformProperty] = `translate3d(${(this.currentSlide * (this.selectorWidth / this.perPage) + (this.drag.startX - this.drag.endX)) * -1}px, 0, 0)`;
     }
   }
+   */
 
 
   /**
    * mouseleave event handler
-   */
   mouseleaveHandler(e) {
     if (this.pointerDown) {
       this.pointerDown = false;
@@ -425,6 +425,7 @@ export default class Siema {
       this.clearDrag();
     }
   }
+   */
 
 
   /**
@@ -437,9 +438,9 @@ export default class Siema {
     this.sliderFrame.style.webkitTransition = `all ${this.config.duration}ms ${this.config.easing}`;
     this.sliderFrame.style.transition = `all ${this.config.duration}ms ${this.config.easing}`;
 
-    if (this.config.draggable) {
-      this.selector.style.cursor = '-webkit-grab';
-    }
+    // if (this.config.draggable) {
+    //   this.selector.style.cursor = '-webkit-grab';
+    // }
 
     // Create a document fragment to put slides into it
     const docFragment = document.createDocumentFragment();
