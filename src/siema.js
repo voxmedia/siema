@@ -25,7 +25,7 @@ export default class Siema {
     this.transformProperty = Siema.webkitOrNot();
 
     // Bind all event handlers for referencability
-    ['resizeHandler', 'touchstartHandler', 'touchendHandler', 'touchmoveHandler', /* 'mousedownHandler', 'mouseupHandler', 'mouseleaveHandler', 'mousemoveHandler',*/ 'mousewheelHandler', 'mousewheelEndHandler'].forEach(method => {
+    ['resizeHandler', 'touchstartHandler', 'touchendHandler', 'touchmoveHandler'/* , 'mousedownHandler', 'mouseupHandler', 'mouseleaveHandler', 'mousemoveHandler'*/].forEach(method => {
       this[method] = this[method].bind(this);
     });
 
@@ -97,7 +97,7 @@ export default class Siema {
       // Touch events
       this.selector.addEventListener('touchstart', this.touchstartHandler, { passive: true });
       this.selector.addEventListener('touchend', this.touchendHandler);
-      this.selector.addEventListener('touchmove', this.touchmoveHandler, { passive: true });
+      this.selector.addEventListener('touchmove', this.touchmoveHandler);
 
       // Mouse events
       // this.selector.addEventListener('mousedown', this.mousedownHandler);
