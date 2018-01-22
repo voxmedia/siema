@@ -21,11 +21,11 @@ export default class Siema {
     // Create global references
     this.selectorWidth = this.selector.offsetWidth;
     this.innerElements = [].slice.call(this.selector.children);
-    this.currentSlide = this.config.startIndex;
+    this.currentSlide = Math.max(0, Math.min(this.config.startIndex, this.innerElements.length - this.config.perPage));
     this.transformProperty = Siema.webkitOrNot();
 
     // Bind all event handlers for referencability
-    ['resizeHandler', 'touchstartHandler', 'touchendHandler', 'touchmoveHandler'/* , 'mousedownHandler', 'mouseupHandler', 'mouseleaveHandler', 'mousemoveHandler'*/].forEach(method => {
+    ['resizeHandler', 'touchstartHandler', 'touchendHandler', 'touchmoveHandler'/* , 'mousedownHandler', 'mouseupHandler', 'mouseleaveHandler', 'mousemoveHandler'*/, 'clickHandler'].forEach(method => {
       this[method] = this[method].bind(this);
     });
 
@@ -91,11 +91,12 @@ export default class Siema {
         startX: 0,
         endX: 0,
         startY: 0,
-        letItGo: null
+        letItGo: null,
+        preventClick: false,
       };
 
       // Touch events
-      this.selector.addEventListener('touchstart', this.touchstartHandler, { passive: true });
+      this.selector.addEventListener('touchstart', this.touchstartHandler);
       this.selector.addEventListener('touchend', this.touchendHandler);
       this.selector.addEventListener('touchmove', this.touchmoveHandler);
 
@@ -104,6 +105,9 @@ export default class Siema {
       // this.selector.addEventListener('mouseup', this.mouseupHandler);
       // this.selector.addEventListener('mouseleave', this.mouseleaveHandler);
       // this.selector.addEventListener('mousemove', this.mousemoveHandler);
+
+      // Click
+      this.selector.addEventListener('click', this.clickHandler);
     }
   }
 
@@ -121,6 +125,7 @@ export default class Siema {
     // this.selector.removeEventListener('mouseup', this.mouseupHandler);
     // this.selector.removeEventListener('mouseleave', this.mouseleaveHandler);
     // this.selector.removeEventListener('mousemove', this.mousemoveHandler);
+    this.selector.removeEventListener('click', this.clickHandler);
   }
 
 
@@ -319,7 +324,8 @@ export default class Siema {
       startX: 0,
       endX: 0,
       startY: 0,
-      letItGo: null
+      letItGo: null,
+      preventClick: this.drag.preventClick
     };
   }
 
@@ -329,6 +335,12 @@ export default class Siema {
    */
   touchstartHandler(e) {
     this.stopPropagation(e);
+    // Prevent dragging / swiping on inputs, selects and textareas
+    const ignoreSiema = ['TEXTAREA', 'OPTION', 'INPUT', 'SELECT'].indexOf(e.target.nodeName) !== -1;
+    if (ignoreSiema) {
+      return;
+    }
+
     this.pointerDown = true;
     this.drag.startX = e.touches[0].pageX;
     this.drag.startY = e.touches[0].pageY;
@@ -373,6 +385,12 @@ export default class Siema {
   /**
    * mousedown event handler
   mousedownHandler(e) {
+    // Prevent dragging / swiping on inputs, selects and textareas
+    const ignoreSiema = ['TEXTAREA', 'OPTION', 'INPUT', 'SELECT'].indexOf(e.target.nodeName) !== -1;
+    if (ignoreSiema) {
+      return;
+    }
+
     e.preventDefault();
     this.stopPropagation(e);
     this.pointerDown = true;
@@ -402,6 +420,13 @@ export default class Siema {
   mousemoveHandler(e) {
     e.preventDefault();
     if (this.pointerDown) {
+      // if dragged element is a link
+      // mark preventClick prop as a true
+      // to detemine about browser redirection later on
+      if (e.target.nodeName === 'A') {
+        this.drag.preventClick = true;
+      }
+
       this.drag.endX = e.pageX;
       this.selector.style.cursor = '-webkit-grabbing';
       this.sliderFrame.style.webkitTransition = `all 0ms ${this.config.easing}`;
@@ -419,6 +444,7 @@ export default class Siema {
       this.pointerDown = false;
       this.selector.style.cursor = '-webkit-grab';
       this.drag.endX = e.pageX;
+      this.drag.preventClick = false;
       this.sliderFrame.style.webkitTransition = `all ${this.config.duration}ms ${this.config.easing}`;
       this.sliderFrame.style.transition = `all ${this.config.duration}ms ${this.config.easing}`;
       this.updateAfterDrag();
@@ -426,6 +452,19 @@ export default class Siema {
     }
   }
    */
+
+
+  /**
+   * click event handler
+   */
+  clickHandler(e) {
+    // if the dragged element is a link
+    // prevent browsers from folowing the link
+    if (this.drag.preventClick) {
+      e.preventDefault();
+    }
+    this.drag.preventClick = false;
+  }
 
 
   /**
@@ -476,6 +515,14 @@ export default class Siema {
     if (index < 0 || index >= this.innerElements.length) {
       throw new Error('Item to remove doesn\'t exist 😭');
     }
+
+    // when iteam wit lower index than current is removed
+    // shift slider back one position
+    // better UX and avoids situation with slider with no visible items
+    if (index < this.currentSlide) {
+      this.currentSlide--;
+    }
+
     this.innerElements.splice(index, 1);
 
     this.updateFrame();
@@ -498,10 +545,12 @@ export default class Siema {
     if (this.innerElements.indexOf(item) !== -1) {
       throw new Error('The same item in a carousel? Really? Nope 😭');
     }
-    this.innerElements.splice(index, 0, item);
 
     // Avoid shifting content
-    this.currentSlide = index <= this.currentSlide ? this.currentSlide + 1 : this.currentSlide;
+    const shouldItShift = index <= this.currentSlide > 0 && this.innerElements.length;
+    this.currentSlide = shouldItShift ? this.currentSlide + 1 : this.currentSlide;
+
+    this.innerElements.splice(index, 0, item);
 
     this.updateFrame();
     if (callback) {
