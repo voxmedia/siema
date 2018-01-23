@@ -278,6 +278,14 @@ export default class Siema {
 
 
   /**
+   * Return array of currently displayed elements
+   **/
+  getCurrentElements() {
+    return this.innerElements.slice(this.currentSlide, this.currentSlide + this.perPage);
+  }
+
+
+  /**
    * Recalculate drag /swipe event and reposition the frame of a slider
    */
   updateAfterDrag() {
