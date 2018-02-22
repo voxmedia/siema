@@ -2,7 +2,7 @@
 layout: default
 ---
 
-Siema is a lightweight (only 2kb gzipped) carousel plugin with no dependencies and no styling. As Brad Frost once said "do that shit yourself". It is 100% open source and [available on Github](https://github.com/pawelgrzybek/siema). It is free to use on personal and commercial projects. Use it with your favourite module bundler or by manually injecting the script into your project.
+Siema is a lightweight (only 3kb gzipped) carousel plugin with no dependencies and no styling. As Brad Frost once said "do that shit yourself". It is 100% open source and [available on Github](https://github.com/pawelgrzybek/siema). It is free to use on personal and commercial projects. Use it with your favourite module bundler or by manually injecting the script into your project.
 
 <a href="https://github.com/pawelgrzybek/siema/releases" class="btn">Download Siema from Github</a>
 
@@ -69,6 +69,7 @@ new Siema({
   threshold: 20,
   loop: false,
   stopPropagation: true,
+  rtl: false,
   onInit: () => {},
   onChange: () => {},
 });
@@ -101,7 +102,10 @@ Touch and mouse dragging threshold (in px) [(example)](http://codepen.io/pawelgr
 **`loop`** (boolean)
 Loop the slides around [(example)](http://codepen.io/pawelgrzybek/pen/zwOrKN).
 
-**`onInit`** (function)
+**`rtl`** (boolean)  
+Enables layout for languages written from right to left (like Hebrew or Arabic) [(example)](https://codepen.io/pawelgrzybek/pen/XZNEgd).
+
+**`onInit`** (function)  
 Runs immediately after initialization [(example)](http://codepen.io/pawelgrzybek/pen/BRBjpE).
 
 **`onChange`** (function)
@@ -189,7 +193,7 @@ I've also created a Codepen collection with tons of Siema examples.
   - Chrome 12
   - Firefox 16
   - Opera 15
-  - Safari 4
+  - Safari 5.1
   - Android Browser 4.0
   - iOS Safari 6.0
 
@@ -197,7 +201,7 @@ I've also created a Codepen collection with tons of Siema examples.
 
 - [Angular version](https://www.npmjs.com/package/ngx-siema) by Lex Zhukov
 - [React version](https://www.npmjs.com/package/react-siema) by Mantas Kaveckas
-- [Vue version](https://www.npmjs.com/package/vue-siema) by Marko Bolliger
+- [Vue version](https://www.npmjs.com/package/vue2-siema) by Carlos Nogueira
 - [Siema-rails](https://github.com/Naggi-Goishi/siema-rails) by Naggi Goishi
 
 

@@ -2,7 +2,7 @@
 
 Full docs with examples: [https://pawelgrzybek.com/siema/](https://pawelgrzybek.com/siema/).
 
-Siema is a lightweight (only 2kb gzipped) carousel plugin with no dependencies and no styling. As Brad Frost once said "do that shit yourself". It is 100% open source and [available on Github](https://github.com/pawelgrzybek/siema). It is free to use on personal and commercial projects. Use it with your favourite module bundler or by manually injecting the script into your project.
+Siema is a lightweight (only 3kb gzipped) carousel plugin with no dependencies and no styling. As Brad Frost once said "do that shit yourself". It is 100% open source and [available on Github](https://github.com/pawelgrzybek/siema). It is free to use on personal and commercial projects. Use it with your favourite module bundler or by manually injecting the script into your project.
 
 ## Installation
 
@@ -52,6 +52,7 @@ new Siema({
   multipleDrag: true,
   threshold: 20,
   loop: false,
+  rtl: false,
   onInit: () => {},
   onChange: () => {},
 });
@@ -83,6 +84,9 @@ Touch and mouse dragging threshold (in px) [(example)](http://codepen.io/pawelgr
 
 **`loop`** (boolean)  
 Loop the slides around [(example)](http://codepen.io/pawelgrzybek/pen/zwOrKN).
+
+**`rtl`** (boolean)  
+Enables layout for languages written from right to left (like Hebrew or Arabic) [(example)](https://codepen.io/pawelgrzybek/pen/XZNEgd).
 
 **`onInit`** (function)  
 Runs immediately after initialization [(example)](http://codepen.io/pawelgrzybek/pen/BRBjpE).
@@ -127,7 +131,7 @@ Prints current slide index [(example)](https://codepen.io/pawelgrzybek/pen/XRNOP
 - Chrome 12
 - Firefox 16
 - Opera 15
-- Safari 4
+- Safari 5.1
 - Android Browser 4.0
 - iOS Safari 6.0
 
