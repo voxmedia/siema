@@ -209,7 +209,7 @@ export default class Siema {
   buildSliderFrameItem(elm) {
     const elementContainer = document.createElement('div');
     elementContainer.style.flexShrink = 0;
-    elementContainer.style.width = `${this.config.loop ? 100 / (this.innerElements.length + (this.perPage * 2)) : 100 / (this.innerElements.length)}%`;
+    elementContainer.style.width = `${this.selectorWidth / this.perPage}px`;
     elementContainer.appendChild(elm);
     return elementContainer;
   }
@@ -612,9 +612,8 @@ export default class Siema {
     // Loop through the slides, add styling and add them to document fragment
     for (let i = 0; i < this.innerElements.length; i++) {
       const elementContainer = document.createElement('div');
-      elementContainer.style.cssFloat = 'left';
-      elementContainer.style.float = 'left';
-      elementContainer.style.width = `${100 / this.innerElements.length}%`;
+      elementContainer.style.flexShrink = 0;
+      elementContainer.style.width = `${this.selectorWidth / this.perPage}px`;
       elementContainer.appendChild(this.innerElements[i]);
       docFragment.appendChild(elementContainer);
     }
